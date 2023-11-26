@@ -1,26 +1,37 @@
 # Client App
 
-## API Docs
+## **Table of Contents**
+* [Documentation Description](#documentation-description)
+* [Database Schema](#database-schema)
+* [HTTP APIs](#http-apis)
+* [PIC](#pic)
 
-Dokumentasi ini tidak strict, silahkan ubah sesuai yang diinginkan, yang penting ada terdokumentasi interface dari masing2 app
+## **Documentation Description**
 
-### HTTP APIs
+This documentation is used to display needed all API and services which provided by the Client application.
+
+## **Database Schema**
+<img src='../assets/client_db.jpg' />
+
+## **HTTP APIs**
 
 | HTTP Method | Endpoint   | Description              |
 | ----------- | ---------- | ------------------------ |
-| GET         | /v1/health | Get service health check |
-| GET         | /v1/todos  | Get list of todos        |
+| GET         | /clients   | Get client data          |
+| POST        | /clients   | Insert a new client data         |
+| GET         | /bookings  | Get client booking data       |
+| GET         | /events/   | Get call events data     |
+| GET         | /events/{event_id} | Get specific event data |
+| GET         | /seats?event_id=&seat_number= | Get specific data for a seat of an event |
+| PATCH       | /seats     | Update a specific seat data |
 
-### GRPC APIs
 
-| Method                               | Return  | Description       |
-| ------------------------------------ | ------- | ----------------- |
-| GetAllTodos(page int, search string) | [ ]Todo | Get list of todos |
+<!-- | GET         | /invoice?invoice_id | Get a specific invoice data |
+| PATCH       | /orders     | Update an order |
+| PATCH       | /invoice     | Update an invoice | -->
 
-## How To Start
+## **PIC**
+| Student ID | Name |
+|------------|-------|
+| 13521116   | Juan Christopher Santoso |
 
-Jelaskan step by step cara menjalankan kode dari service ini, misal:
-
-1. Ensure port X, Y, Z is not used and exposed
-2. Run `docker-compose -f docker-compose-dev.yml up`
-3. Hit http://localhost:X/health and see if it returns properly
