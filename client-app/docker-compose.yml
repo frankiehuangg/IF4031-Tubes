@@ -1,6 +1,7 @@
 services: 
   web: 
     build: . 
+    image : django
     command: 
       python /code/django_app/manage.py runserver 0.0.0.0:8000 
     volumes: 
@@ -9,6 +10,16 @@ services:
       - "8000:8000"
     depends_on: 
       - postgres_db 
+      - migration
+
+  migration:
+    image: django
+    command: 
+      python /code/django_app/manage.py migrate --noinput
+    volumes:
+      - .:/code
+    depends_on:
+      - postgres_db
 
   postgres_db: 
     container_name: 
