@@ -8,9 +8,8 @@ CREATE TABLE events (
 CREATE TYPE status AS ENUM ('empty', 'marked', 'paid');
 
 CREATE TABLE seats (
-    event_id INT NOT NULL REFERENCES events(event_id),
-    client_id INT NOT NULL,
+    seat_id SERIAL PRIMARY KEY,
+    event_id INT NOT NULL REFERENCES events(event_id) ON DELETE CASCADE ,
     seat_number INT NOT NULL,
-    seat_status status NOT NULL,
-    PRIMARY KEY (event_id, client_id, seat_number)
+    seat_status status NOT NULL DEFAULT 'empty'
 );
