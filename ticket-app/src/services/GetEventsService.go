@@ -6,7 +6,6 @@ import (
 	"microservices/ticket/src/clients"
 	"microservices/ticket/src/models"
 	"net/http"
-	"time"
 )
 
 func GetEvents(w http.ResponseWriter, r *http.Request) {
@@ -23,20 +22,22 @@ func GetEvents(w http.ResponseWriter, r *http.Request) {
 	var events []models.Events
 
 	for rows.Next() {
-		var EventID int
-		var EventName string
-		var EventDate time.Time
+		var retrievedEventID int
+		var retrievedEventName string
+		var retrievedEventDate string
+		var retrievedTotalSeat int
 
-		err = rows.Scan(&EventID, &EventName, &EventDate)
+		err = rows.Scan(&retrievedEventID, &retrievedEventName, &retrievedEventDate, retrievedTotalSeat)
 
 		if err != nil {
 			panic(err)
 		}
 
 		events = append(events, models.Events{
-			EventID:   EventID,
-			EventName: EventName,
-			EventDate: EventDate,
+			EventID:   retrievedEventID,
+			EventName: retrievedEventName,
+			EventDate: retrievedEventDate,
+			TotalSeat: retrievedTotalSeat,
 		})
 	}
 
