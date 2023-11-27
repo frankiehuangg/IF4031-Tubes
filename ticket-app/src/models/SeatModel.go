@@ -1,8 +1,8 @@
 package models
 
 type SeatModel struct {
+	SeatID     int    `json:"seat_id"`
 	EventID    int    `json:"event_id"`
-	ClientID   int    `json:"client_id"`
 	SeatNumber int    `json:"seat_number"`
 	SeatStatus string `json:"seat_status"`
 }
