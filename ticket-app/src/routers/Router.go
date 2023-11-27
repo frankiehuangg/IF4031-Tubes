@@ -3,7 +3,7 @@ package routers
 import (
 	"fmt"
 	"github.com/gorilla/mux"
-	"microservices/ticket/src/services"
+	"microservices/ticket/src/services/events"
 	"os"
 )
 
@@ -12,11 +12,15 @@ func SetupRoutes() *mux.Router {
 	router := mux.NewRouter()
 
 	// List of routes
-	router.HandleFunc("/events", services.GetEvents).Methods("GET")
-	router.HandleFunc("/events", services.CreateEvent).Methods("POST")
-	router.HandleFunc("/events/{event_id}", services.GetEventDetail).Methods("GET")
 
-	fmt.Printf("Server started at %s", os.Getenv("PORT"))
+	// events
+	router.HandleFunc("/events", events.CreateEvent).Methods("POST")
+	router.HandleFunc("/events", events.GetEvents).Methods("GET")
+	router.HandleFunc("/events/{event_id}", events.GetEventDetail).Methods("GET")
+	router.HandleFunc("/events", events.UpdateEvent).Methods("PATCH")
+	router.HandleFunc("/events", events.DeleteEvent).Methods("DELETE")
+
+	fmt.Printf("Server started at %s\n", os.Getenv("PORT"))
 
 	return router
 }
