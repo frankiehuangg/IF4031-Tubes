@@ -1,4 +1,4 @@
-package services
+package events
 
 import (
 	"encoding/json"
@@ -42,7 +42,7 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 
 		var events []models.Events
 
-		err := db.QueryRow(
+		eventErr := db.QueryRow(
 			"INSERT INTO events (event_name, event_date, total_seat) VALUES ($1, $2, $3) RETURNING * ;",
 			eventName,
 			eventDate,
@@ -54,9 +54,15 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 			&retrievedTotalSeat,
 		)
 
-		if err != nil {
-			panic(err)
+		if eventErr != nil {
+			panic(eventErr)
 		}
+
+		db.QueryRow(
+			"INSERT INTO seats (event_id, seat_number) SELECT $1, generate_series FROM generate_series(1, $2) ;",
+			retrievedEventId,
+			retrievedTotalSeat,
+		)
 
 		events = append(events, models.Events{
 			EventID:   retrievedEventId,
