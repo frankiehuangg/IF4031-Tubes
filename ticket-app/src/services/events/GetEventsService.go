@@ -1,4 +1,4 @@
-package services
+package events
 
 import (
 	"encoding/json"
@@ -27,7 +27,7 @@ func GetEvents(w http.ResponseWriter, r *http.Request) {
 		var retrievedEventDate string
 		var retrievedTotalSeat int
 
-		err = rows.Scan(&retrievedEventID, &retrievedEventName, &retrievedEventDate, retrievedTotalSeat)
+		err = rows.Scan(&retrievedEventID, &retrievedEventName, &retrievedEventDate, &retrievedTotalSeat)
 
 		if err != nil {
 			panic(err)
