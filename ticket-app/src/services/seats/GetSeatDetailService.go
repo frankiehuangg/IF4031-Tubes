@@ -11,7 +11,7 @@ import (
 
 func GetSeatDetail(w http.ResponseWriter, r *http.Request) {
 	eventID := mux.Vars(r)["event_id"]
-	seatNumber := mux.Vars(r)["seat_number"]
+	seatNumber := r.URL.Query().Get("seat_number")
 
 	var response = models.SeatJSONResponse{}
 
@@ -28,9 +28,9 @@ func GetSeatDetail(w http.ResponseWriter, r *http.Request) {
 	} else {
 		db := clients.GetDBInstance()
 
-		fmt.Printf("[!] [GET] [/seats]\n")
+		fmt.Printf("[!] [GET] [/seats/%s]\n", eventID)
 
-		rows, err := db.Query("SELECT * FROM seats WHERE event_id = $1 ;", eventID)
+		rows, err := db.Query("SELECT * FROM seats WHERE event_id = $1 AND seat_number = $2 ;", eventID, seatNumber)
 
 		if err != nil {
 			panic(err)
@@ -51,10 +51,10 @@ func GetSeatDetail(w http.ResponseWriter, r *http.Request) {
 			}
 
 			seats = append(seats, models.Seats{
-				retrievedSeatID,
-				retrievedEventID,
-				retrievedSeatNumber,
-				retrievedSeatStatus,
+				SeatID:     retrievedSeatID,
+				EventID:    retrievedEventID,
+				SeatNumber: retrievedSeatNumber,
+				SeatStatus: retrievedSeatStatus,
 			})
 		}
 
