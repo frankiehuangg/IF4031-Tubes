@@ -33,10 +33,6 @@ services:
       file: payment-app/docker-compose.yml
       service: payment-app
     env_file: .env
-    networks:
-      - payment-app
-    depends_on:
-      - payment-app-db
 
   payment-app-db:
     hostname: payment-app-db
@@ -44,8 +40,3 @@ services:
       file: payment-app/docker-compose.yml
       service: payment-app-db
     env_file: .env
-    networks:
-      - payment-app
-
-networks:
-  payment-app:
