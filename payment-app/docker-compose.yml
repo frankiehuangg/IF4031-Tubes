@@ -8,6 +8,11 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: user
       POSTGRES_DB: payment
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d payment"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - ./db:/var/lib/postgresql/data/
   payment-app:

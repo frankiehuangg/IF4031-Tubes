@@ -31,7 +31,7 @@ func UpdateInvoice(w http.ResponseWriter, r *http.Request) {
 
 		responseBody := bytes.NewBuffer(postBody)
 
-		req, err := http.NewRequest("PATCH", "http://localhost:7000/invoices", responseBody)
+		req, err := http.NewRequest("PATCH", "http://payment-app:8000/invoices", responseBody)
 
 		if err != nil {
 			panic(err)

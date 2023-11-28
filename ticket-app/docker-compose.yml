@@ -7,11 +7,11 @@ services:
     hostname: ticket-db
     restart: on-failure
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${TICKET_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${TICKET_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${TICKET_POSTGRES_DB}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      test: ["CMD-SHELL", "pg_isready -U ${TICKET_POSTGRES_USER} -d ${TICKET_POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -29,9 +29,9 @@ services:
       ticket-db:
         condition: service_healthy
     environment:
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
+      DB_USER: ${TICKET_POSTGRES_USER}
+      DB_PASSWORD: ${TICKET_POSTGRES_PASSWORD}
+      DB_NAME: ${TICKET_POSTGRES_DB}
       PORT: ${TICKET_PORT}
     volumes:
       - .:/app

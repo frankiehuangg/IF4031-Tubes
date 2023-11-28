@@ -44,14 +44,14 @@ func OrderSeat(w http.ResponseWriter, r *http.Request) {
 		var seats []models.Seats
 
 		err := db.QueryRow(
-			"UPDATE seats SET seat_status = 'waiting' WHERE event_id = $1 AND seat_number = $2 ; ",
+			"UPDATE seats SET seat_status = 'waiting' WHERE event_id = $1 AND seat_number = $2 RETURNING * ; ",
 			eventID,
 			seatNumber,
 		).Scan(
-			retrievedSeatID,
-			retrievedEventID,
-			retrievedSeatNumber,
-			retrievedSeatStatus,
+			&retrievedSeatID,
+			&retrievedEventID,
+			&retrievedSeatNumber,
+			&retrievedSeatStatus,
 		)
 
 		if err != nil {
@@ -72,7 +72,7 @@ func OrderSeat(w http.ResponseWriter, r *http.Request) {
 
 		responseBody := bytes.NewBuffer(postBody)
 
-		resp, err := http.Post("http://localhost:7000/invoices", "application/json", responseBody)
+		resp, err := http.Post("http://payment-app:8000/invoices", "application/json", responseBody)
 
 		if err != nil {
 			panic(err)

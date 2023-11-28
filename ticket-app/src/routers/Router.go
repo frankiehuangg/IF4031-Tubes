@@ -6,7 +6,7 @@ import (
 	"microservices/ticket/src/services/events"
 	"microservices/ticket/src/services/invoices"
 	"microservices/ticket/src/services/seats"
-	"os"
+	"microservices/ticket/src/utils"
 )
 
 func SetupRoutes() *mux.Router {
@@ -24,14 +24,14 @@ func SetupRoutes() *mux.Router {
 
 	// seats
 	router.HandleFunc("/seats", seats.GetSeats).Methods("GET")
-	router.HandleFunc("/seats", seats.GetSeatDetail).Methods("GET")
+	router.HandleFunc("/seats/{event_id}", seats.GetSeatDetail).Methods("GET")
 	router.HandleFunc("/seats", seats.OrderSeat).Methods("PATCH")
 
 	// invoices
 	router.HandleFunc("/invoices", invoices.GetInvoice).Methods("GET")
 	router.HandleFunc("/invoices", invoices.UpdateInvoice).Methods("PATCH")
 
-	fmt.Printf("Server started at %s\n", os.Getenv("PORT"))
+	fmt.Printf("Server started at %s\n", utils.GoDotEnvVariable("TICKET_PORT"))
 
 	return router
 }

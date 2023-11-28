@@ -22,7 +22,7 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Println("[!] [GET] [/invoice]")
 
-		resp, err := http.Get("http://localhost:7000/invoices?invoice_id=" + invoiceID)
+		resp, err := http.Get("http://payment-app:8000/invoices?invoice_id=" + invoiceID)
 
 		if err != nil {
 			panic(err)
