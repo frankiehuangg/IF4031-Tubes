@@ -18,17 +18,17 @@ func CreateEvent(w http.ResponseWriter, r *http.Request) {
 	if eventName == "" {
 		response = models.EventJSONResponse{
 			Type:    "error",
-			Message: "event name form value is missing!",
+			Message: "Form value event_name is missing!",
 		}
 	} else if eventDate == "" {
 		response = models.EventJSONResponse{
 			Type:    "error",
-			Message: "event date form value is missing!",
+			Message: "Form value event_date is missing!",
 		}
 	} else if totalSeat == "" {
 		response = models.EventJSONResponse{
 			Type:    "error",
-			Message: "total seat form value is missing!",
+			Message: "Form value total_seat is missing!",
 		}
 	} else {
 		db := clients.GetDBInstance()
