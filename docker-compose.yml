@@ -35,8 +35,11 @@ services:
     env_file: .env
     networks:
       - payment-app
-      
+    depends_on:
+      - payment-app-db
+
   payment-app-db:
+    hostname: payment-app-db
     extends:
       file: payment-app/docker-compose.yml
       service: payment-app-db

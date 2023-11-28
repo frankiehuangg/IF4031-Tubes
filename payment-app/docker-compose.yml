@@ -28,4 +28,5 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
-      - payment-app-db
+      payment-app-db:
+        condition: service_healthy
