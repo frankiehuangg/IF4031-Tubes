@@ -3,20 +3,20 @@ package seats
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"microservices/ticket/src/clients"
 	"microservices/ticket/src/models"
 	"net/http"
 )
 
 func GetSeats(w http.ResponseWriter, r *http.Request) {
-	eventID := mux.Vars(r)["event_id"]
+	eventID := r.URL.Query().Get("event_id")
 
 	var response = models.SeatJSONResponse{}
 
 	if eventID == "" {
 		response = models.SeatJSONResponse{
-			Type: "error",
+			Type:    "error",
+			Message: "URL Params event_id is missing!",
 		}
 	} else {
 		db := clients.GetDBInstance()
@@ -44,10 +44,10 @@ func GetSeats(w http.ResponseWriter, r *http.Request) {
 			}
 
 			seats = append(seats, models.Seats{
-				retrievedSeatID,
-				retrievedEventID,
-				retrievedSeatNumber,
-				retrievedSeatStatus,
+				SeatID:     retrievedSeatID,
+				EventID:    retrievedEventID,
+				SeatNumber: retrievedSeatNumber,
+				SeatStatus: retrievedSeatStatus,
 			})
 		}
 
