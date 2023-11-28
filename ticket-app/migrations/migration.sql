@@ -5,11 +5,11 @@ CREATE TABLE events (
     total_seat INT NOT NULL
 );
 
-CREATE TYPE status AS ENUM ('empty', 'marked', 'paid');
+CREATE TYPE status AS ENUM ('empty', 'waiting', 'booked');
 
 CREATE TABLE seats (
     seat_id SERIAL PRIMARY KEY,
     event_id INT NOT NULL REFERENCES events(event_id) ON DELETE CASCADE ,
     seat_number INT NOT NULL,
-    seat_status status NOT NULL DEFAULT 'empty'
+    seat_status status NOT NULL DEFAULT 'booked'
 );
