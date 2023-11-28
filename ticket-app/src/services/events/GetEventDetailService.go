@@ -15,7 +15,10 @@ func GetEventDetail(w http.ResponseWriter, r *http.Request) {
 	var response = models.EventJSONResponse{}
 
 	if eventID == "" {
-		response = models.EventJSONResponse{Type: "error", Message: "event id parameter is missing!"}
+		response = models.EventJSONResponse{
+			Type:    "error",
+			Message: "URL params event_id is not set!",
+		}
 	} else {
 		db := clients.GetDBInstance()
 
