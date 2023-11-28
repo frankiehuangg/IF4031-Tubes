@@ -4,37 +4,45 @@ services:
   client-app:
     extends:
       file: client-app/docker-compose.yml
-      service: web
-    env_file: client-app/.env
+      service: client-app
+    env_file: .env
   client-app-db:
     extends:
       file: client-app/docker-compose.yml
       service: client-app-db
-    env_file: client-app/.env
+    env_file: .env
   client-app-migration:
     extends:
       file: client-app/docker-compose.yml
-      service: migration
-    env_file: client-app/.env
+      service: client-app-migration
+    env_file: .env
 
-  ticket-app:
+  ticket-service:
     extends:
       file: ticket-app/docker-compose.yml
       service: ticket-service
-    env_file: ticket-app/.env
+    env_file: .env
   ticket-db:
     extends:
       file: ticket-app/docker-compose.yml
       service: ticket-db
-    env_file: ticket-app/.env
+    env_file: .env
 
   payment-app:
     extends:
       file: payment-app/docker-compose.yml
       service: payment-app
-    env_file: payment-app/.env
+    env_file: .env
+    networks:
+      - payment-app
+      
   payment-app-db:
     extends:
       file: payment-app/docker-compose.yml
-      service: payment-app
-    env_file: payment-app/.env
+      service: payment-app-db
+    env_file: .env
+    networks:
+      - payment-app
+
+networks:
+  payment-app:
