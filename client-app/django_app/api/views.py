@@ -17,12 +17,11 @@ def client(request):
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     else :
-      print("ga valid")
       return Response(serializer.data, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
     
     
 
-@api_view(['GET', "POST"])
+@api_view(['GET', "POST", "PATCH"])
 def booking(request):
   if (request.method == "GET"):
     bookings = Booking.objects.all()
@@ -33,14 +32,15 @@ def booking(request):
     serializer = BookingSerializer(data=request.data)
     if (serializer.is_valid()):
       serializer.save()
-    return Response(serializer.data)
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+      return Response(serializer.data, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
   
-
-'''
-{
-"name" : "Juan",
-"username" : "Gulgul"
-}
-
-
-'''
+  elif (request.method == "PATCH"):
+    serializer = BookingSerializer(data=request.data)
+    if (serializer.is_valid()):
+      serializer.save()
+      return Response(serializer.data)
+    else:
+      return Response(serializer.data, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+  

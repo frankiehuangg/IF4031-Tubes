@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Page</title>
+  </head>
+  <body>
+    <h1>Client Page</h1>
+
+    <div style="margin-bottom: 5px; ">
+      <a style="text-decoration: none;" href="/">
+        <button>Event Page</button>
+      </a>
+      <a style="text-decoration: none;" href="/booking">
+        <button>Booking Page</button>
+      </a>
+    </div>
+
+    <h2>List of Clients</h2>
+    <div>
+      {% if clients %}
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Created Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for client in clients %}
+          <tr>
+            <td>{{ client.client_id }}</td>
+            <td>{{ client.name }}</td>
+            <td>{{ client.username }}</td>
+            <td>{{ client.created }}</td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+      {% else %}
+        <p> No Clients Available</p>
+      {% endif %}
+    </div>    
+  </body>
+</html>
