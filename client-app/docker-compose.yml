@@ -1,5 +1,5 @@
 services: 
-  web: 
+  client-app: 
     build: . 
     image : django
     command: 
@@ -9,29 +9,31 @@ services:
     ports: 
       - "8000:8000"
     depends_on: 
-      - postgres_db 
-      - migration
+      - client-app-db 
+      - client-app-migration
 
-  migration:
+  client-app-migration:
     image: django
     command: 
       python /code/django_app/manage.py migrate --noinput
     volumes:
       - .:/code
     depends_on:
-      - postgres_db
+      - client-app-db
 
-  postgres_db: 
-    container_name: 
-      postgres_client_pat
-    image: 
-      postgres:latest
+  client-app-db: 
+    container_name: postgres_client_pat
+    image: postgres:latest
+    hostname: postgres_client_pat
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${CLIENT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${CLIENT_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${CLIENT_POSTGRES_DB}
     volumes: 
-      - postgres_db:/var/lib/postgresql/data/ 
+      - ./db:/var/lib/postgresql/data/
     env_file:
       - .env
-    restart: 
-      always
     ports: 
       - "5432:5432"
 

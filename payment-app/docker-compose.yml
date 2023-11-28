@@ -1,8 +1,5 @@
 version: "3.7"
-networks:
-  payment-app:
-volumes:
-  payment-app-data:
+
 services:
   payment-app-db:
     hostname: payment-app-db
@@ -12,9 +9,7 @@ services:
       POSTGRES_PASSWORD: user
       POSTGRES_DB: payment
     volumes:
-      - payment-app-data:/data/db
-    networks:
-      - payment-app
+      - ./db:/var/lib/postgresql/data/
   payment-app:
     build:
       context: .
@@ -27,11 +22,10 @@ services:
       - "/app/node_modules"
     command: >
       sh -c "
+            npx prisma migrate dev &&
             npx prisma generate dev &&
             npm run dev"
     environment:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
       - payment-app-db
-    networks:
-      - payment-app

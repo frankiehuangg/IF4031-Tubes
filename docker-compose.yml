@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  client-app:
+    extends:
+      file: client-app/docker-compose.yml
+      service: client-app
+    env_file: .env
+  client-app-db:
+    extends:
+      file: client-app/docker-compose.yml
+      service: client-app-db
+    env_file: .env
+  client-app-migration:
+    extends:
+      file: client-app/docker-compose.yml
+      service: client-app-migration
+    env_file: .env
+
+  ticket-service:
+    extends:
+      file: ticket-app/docker-compose.yml
+      service: ticket-service
+    env_file: .env
+  ticket-db:
+    extends:
+      file: ticket-app/docker-compose.yml
+      service: ticket-db
+    env_file: .env
+
+  payment-app:
+    extends:
+      file: payment-app/docker-compose.yml
+      service: payment-app
+    env_file: .env
+    networks:
+      - payment-app
+      
+  payment-app-db:
+    extends:
+      file: payment-app/docker-compose.yml
+      service: payment-app-db
+    env_file: .env
+    networks:
+      - payment-app
+
+networks:
+  payment-app:
