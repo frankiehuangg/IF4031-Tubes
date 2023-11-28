@@ -8,16 +8,18 @@ import (
 )
 
 var (
-	DbUser     = utils.GoDotEnvVariable("DB_USER")
-	DbPassword = utils.GoDotEnvVariable("DB_PASSWORD")
-	DbName     = utils.GoDotEnvVariable("DB_NAME")
-	DbPort     = utils.GoDotEnvVariable("DB_PORT")
+	DbUser     = utils.GoDotEnvVariable("TICKET_POSTGRES_USER")
+	DbPassword = utils.GoDotEnvVariable("TICKET_POSTGRES_PASSWORD")
+	DbName     = utils.GoDotEnvVariable("TICKET_POSTGRES_DB")
+	DbPort     = utils.GoDotEnvVariable("TICKET_POSTGRES_PORT")
+	DbHost     = utils.GoDotEnvVariable("TICKET_POSTGRES_HOST")
 )
 
 func GetDBInstance() *sql.DB {
-	dbInfo := fmt.Sprintf("user=%s password=%s host=ticket-db port=%s dbname=%s sslmode=disable",
+	dbInfo := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable",
 		DbUser,
 		DbPassword,
+		DbHost,
 		DbPort,
 		DbName,
 	)
