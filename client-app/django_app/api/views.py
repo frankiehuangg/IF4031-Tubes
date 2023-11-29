@@ -85,3 +85,13 @@ def seat(request):
     seat = requests.get(f'{TICKET_API_URL}seats?event_id={event_id}&seat_number={seat_number}').json()
     json_data = {"status": status.HTTP_200_OK, "message" : "Successful select", "data": seat['data']}
     return Response(json_data)
+
+@api_view(['POST'])
+def pdf(request):
+  print("WOW")
+  if (request.method == "POST"):
+    binary_file = request.body
+    with open("./out.pdf", "wb") as f:
+      f.write(binary_file)
+    json_data = {"status": status.HTTP_200_OK, "message": "webhook read successfully"}
+    return Response(json_data)

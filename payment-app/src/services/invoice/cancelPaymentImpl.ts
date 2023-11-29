@@ -33,29 +33,3 @@ export const processPaymentImpl = async ({ invoice_id }: IProcessPayment) => {
   }
   return data;
 };
-
-export const cancelPaymentImpl = async ({ invoice_id }: IProcessPayment) => {
-  const payment_status: Status = "CANCELED";
-
-  const invoice = await readInvoice({invoice_id})
-  if (invoice.payment_status !== "PENDING") {
-    throw new Error("Cannot cancel not pending payment!")
-  }
-  const data = await prisma.invoice.update({
-    where: {
-      invoice_id: invoice_id
-    },
-    data: {
-      payment_status: "CANCELED",
-      priority: 999999
-    },
-  });
-  try {
-    const kafkaConfig = new KafkaConfig();
-    const messages = [{ key: "key1", value: JSON.stringify(data) }];
-    kafkaConfig.produce("payment", messages);
-  } catch (error) {
-    console.log(error);
-  }
-  return data;
-};

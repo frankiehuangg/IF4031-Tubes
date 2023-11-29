@@ -1,9 +1,9 @@
 import { $Enums, Invoice } from "@prisma/client";
 import { createInvoiceImpl } from "./createInvoiceImpl";
 import { deleteInvoiceImpl } from "./deleteInvoiceImpl";
-import { readAllInvoiceImpl, readInvoiceImpl } from "./readInvoiceImpl";
+import { readAllInvoiceImpl, readInvoiceImpl, readOldestInvoiceFromClientImpl } from "./readInvoiceImpl";
 import { updateInvoiceImpl } from "./updateInvoiceImpl";
-import { processPaymentImpl } from "./processPaymentImpl";
+import { processPaymentImpl, cancelPaymentImpl } from "./processPaymentImpl";
 
 export interface ICreateInvoice {
   client_id: number;
@@ -36,3 +36,11 @@ export interface IProcessPayment {
   invoice_id: number;
 }
 export const processPayment = processPaymentImpl;
+
+export interface IReadOldestInvoiceFromClient {
+  client_id: number
+  seat_id: number
+}
+export const readOldestInvoiceFromClient = readOldestInvoiceFromClientImpl;
+
+export const cancelPayment = cancelPaymentImpl;

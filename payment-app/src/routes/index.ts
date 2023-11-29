@@ -1,4 +1,4 @@
-import { processPayment } from "./../services/invoice/index";
+import { cancelPayment, processPayment } from "./../services/invoice/index";
 import { Invoice } from "@prisma/client";
 import express, { Request, Response } from "express";
 import { HTTPRequestError } from "../errors/HTTPRequestError";
@@ -19,6 +19,23 @@ const kafkaConfig = new KafkaConfig();
 kafkaConfig.consume("payment", (value: any) => {
   console.log("📨 Receive message: ", value);
 });
+
+router.get("/test", async (req: Request, res: Response) => {
+  try {
+    const { message } = req.body;
+    const kafkaConfig = new KafkaConfig();
+    const messages = [{ key: "key1", value: "foobar" }];
+    kafkaConfig.produce("payment", messages);
+
+    res.status(200).json({
+      status: "Ok!",
+      message: "Message successfully send!",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 /*
 Create new invoice 
 */
@@ -99,5 +116,32 @@ router.patch("/invoices", async (req: Request, res: Response) => {
     }
   }
 });
+
+
+/* 
+Purposfuly using get so client can _simulate_ payment by clicking the link 
+*/
+router.get("/invoices/pay/:invoice_id", async (req: Request, res: Response) => { 
+  try {
+    const { invoice_id } = req.params; // No need for 'as unknown'
+    const parsedId = parseInt(invoice_id as string, 10); // Specify the radix as 10
+    const data = await processPayment({invoice_id: parsedId});
+    return res.status(200).send("Payment success!")
+  } catch (err) {
+    return res.status(400).send({success: false, message: "cannot process payment" })
+  }
+});
+
+router.get("/invoices/cancel/:invoice_id" , async (req: Request, res: Response) => { 
+  try {
+    const { invoice_id } = req.params 
+    const parsedId = parseInt(invoice_id as string, 10); // Specify the radix as 10
+    const data = await cancelPayment({ invoice_id: parsedId });
+    return res.status(200).send("Payment canceled!")
+  } catch (err) {
+    return res.status(400).send({success: false, message: "cannot process cancel" })
+  }
+
+})
 
 export default router;

@@ -3,12 +3,16 @@ package seats
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"github.com/jung-kurt/gofpdf"
 	"io"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"microservices/ticket/src/clients"
 	"microservices/ticket/src/models"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 )
@@ -18,27 +22,30 @@ func OrderSeat(w http.ResponseWriter, r *http.Request) {
 	seatNumber := r.FormValue("seat_number")
 	eventID := r.FormValue("event_id")
 
-	var response = models.SeatJSONResponse{}
+	var response = models.InvoiceJSONResponse{}
 
 	if clientID == "" {
-		response = models.SeatJSONResponse{
+		response = models.InvoiceJSONResponse{
 			Type:    "error",
 			Message: "Form value client_id is missing!",
 		}
 	} else if seatNumber == "" {
-		response = models.SeatJSONResponse{
+		response = models.InvoiceJSONResponse{
 			Type:    "error",
 			Message: "Form value seat_number is missing!",
 		}
 	} else if eventID == "" {
-		response = models.SeatJSONResponse{
+		response = models.InvoiceJSONResponse{
 			Type:    "error",
 			Message: "Form value event_id is missing!",
 		}
 	} else {
 		random := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-		if random.Intn(100) > 80 {
+		num := random.Intn(100)
+		log.Println(num)
+
+		if num <= 80 {
 			db := clients.GetDBInstance()
 
 			var retrievedSeatID int
@@ -70,10 +77,16 @@ func OrderSeat(w http.ResponseWriter, r *http.Request) {
 				SeatStatus: retrievedSeatStatus,
 			})
 
-			postBody, _ := json.Marshal(map[string]string{
-				"client_id": clientID,
-				"seat_id":   strconv.Itoa(retrievedSeatID),
+			val, err := strconv.Atoi(clientID)
+
+			fmt.Println(val, retrievedSeatID)
+
+			postBody, _ := json.Marshal(map[string]int{
+				"client_id": val,
+				"seat_id":   retrievedSeatID,
 			})
+
+			fmt.Println(postBody)
 
 			responseBody := bytes.NewBuffer(postBody)
 
@@ -90,19 +103,75 @@ func OrderSeat(w http.ResponseWriter, r *http.Request) {
 				}
 			}(resp.Body)
 
-			_, err = ioutil.ReadAll(resp.Body)
+			out, err := ioutil.ReadAll(resp.Body)
 
 			if err != nil {
 				panic(err)
 			}
 
-			response = models.SeatJSONResponse{
-				Type:    "success",
-				Data:    seats,
-				Message: "Seat status has been updated successfully!",
+			type Response struct {
+				Status  bool           `json:"success"`
+				Message string         `json:"message"`
+				Data    models.Invoice `json:"data"`
+			}
+
+			var res Response
+
+			fmt.Println(res)
+
+			err = json.Unmarshal([]byte(out), &res)
+
+			if err != nil {
+				panic(err)
+			}
+
+			var invoices []models.Invoice
+
+			invoices = append(invoices, res.Data)
+
+			if res.Status == true {
+				response = models.InvoiceJSONResponse{
+					Type:    "success",
+					Data:    invoices,
+					Message: "Seat status has been updated successfully!",
+				}
+			} else {
+				response = models.InvoiceJSONResponse{
+					Type:    "error",
+					Message: "Invoice ID not found",
+				}
 			}
 		} else {
-			response = models.SeatJSONResponse{
+			pdf := gofpdf.New("P", "mm", "A4", "")
+			pdf.AddPage()
+			pdf.SetFont("Arial", "B", 16)
+			pdf.Text(40, 10, "Booking failed: cannot reach external event host")
+
+			err := pdf.OutputFileAndClose("./out.pdf")
+
+			if err != nil {
+				log.Println("ERROR", err.Error())
+			}
+
+			file, err := os.Open("./out.pdf")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			defer file.Close()
+
+			content, _ := ioutil.ReadFile("./out.pdf")
+
+			resp, err := http.Post("http://client-app:8000/api/invoices", "application/json", bytes.NewBuffer(content))
+
+			fmt.Println(resp)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			response = models.InvoiceJSONResponse{
 				Type:    "error",
 				Message: "Error fetching seat",
 			}
