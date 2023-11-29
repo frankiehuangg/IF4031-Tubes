@@ -11,5 +11,5 @@ CREATE TABLE seats (
     seat_id SERIAL PRIMARY KEY,
     event_id INT NOT NULL REFERENCES events(event_id) ON DELETE CASCADE ,
     seat_number INT NOT NULL,
-    seat_status status NOT NULL DEFAULT 'booked'
+    seat_status status NOT NULL DEFAULT 'empty'
 );
