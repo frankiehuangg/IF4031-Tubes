@@ -7,13 +7,13 @@ class KafkaConfig {
   constructor() {
     this.kafka = new Kafka({
       clientId: "nodejs-kafka",
-      brokers: ["kafka:9092"],
+      brokers: ["kafka:29092"],
     });
     this.producer = this.kafka.producer();
     this.consumer = this.kafka.consumer({ groupId: "payment-server" });
   }
 
-  async produce(topic, messages) {
+  async produce(topic: any, messages: any) {
     try {
       await this.producer.connect();
       await this.producer.send({
@@ -27,12 +27,12 @@ class KafkaConfig {
     }
   }
 
-  async consume(topic, callback) {
+  async consume(topic: any, callback: any) {
     try {
       await this.consumer.connect();
       await this.consumer.subscribe({ topic: topic, fromBeginning: true });
       await this.consumer.run({
-        eachMessage: async ({ topic, partition, message }) => {
+        eachMessage: async ({ topic, partition, message }: {topic: any, partition: any, message: any}) => {
           const value = message.value.toString();
           callback(value);
         },

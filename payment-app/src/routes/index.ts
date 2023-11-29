@@ -16,7 +16,7 @@ import KafkaConfig from "../data-access/kafka.server";
 const router = express.Router();
 
 const kafkaConfig = new KafkaConfig();
-kafkaConfig.consume("payment", (key, value) => {
+kafkaConfig.consume("payment", (value: any) => {
   console.log("📨 Receive message: ", value);
 });
 /*
