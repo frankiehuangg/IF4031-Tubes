@@ -12,8 +12,13 @@ import {
   readInvoice,
   updateInvoice,
 } from "../services/invoice";
+import KafkaConfig from "../data-access/kafka.server";
 const router = express.Router();
 
+const kafkaConfig = new KafkaConfig();
+kafkaConfig.consume("payment", (key, value) => {
+  console.log("📨 Receive message: ", value);
+});
 /*
 Create new invoice 
 */
@@ -45,7 +50,10 @@ router.get("/invoices", async (req: Request, res: Response) => {
   try {
     let data;
     if (req.query.invoice_id) {
-    const invoice_id = typeof req.query.invoice_id == 'string' ? Number.parseInt(req.query.invoice_id): 0;
+      const invoice_id =
+        typeof req.query.invoice_id == "string"
+          ? Number.parseInt(req.query.invoice_id)
+          : 0;
       data = await readInvoice({ invoice_id });
     } else {
       data = await readAllInvoice();
