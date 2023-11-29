@@ -24,7 +24,7 @@ services:
     build: .
     hostname: ticket-service
     ports:
-      - "6000:6000"
+      - "8002:6000"
     depends_on:
       ticket-db:
         condition: service_healthy
