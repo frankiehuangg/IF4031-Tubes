@@ -67,14 +67,14 @@ def booking(request):
 def event(request):
   if (request.method == "GET"):
     events = requests.get(TICKET_API_URL+"events").json()
-    json_data = {"status": status.HTTP_200_OK, "message" : "Successful select", "data": events}
+    json_data = {"status": status.HTTP_200_OK, "message" : "Successful select", "data": events['data']}
     return Response(json_data)
 
 @api_view(['GET'])
 def event_detail(request, id):
   if (request.method == "GET"):
     event = requests.get(TICKET_API_URL+"events/"+str(id)).json()
-    json_data = {"status": status.HTTP_200_OK, "message" : "Successful select", "data": event}
+    json_data = {"status": status.HTTP_200_OK, "message" : "Successful select", "data": event['data']}
     return Response(json_data)
 
 @api_view(['GET'])
@@ -83,5 +83,5 @@ def seat(request):
     event_id = request.GET.get('event_id')
     seat_number = request.GET.get('seat_number')
     seat = requests.get(f'{TICKET_API_URL}seats?event_id={event_id}&seat_number={seat_number}').json()
-    json_data = {"status": status.HTTP_200_OK, "message" : "Successful select", "data": seat}
+    json_data = {"status": status.HTTP_200_OK, "message" : "Successful select", "data": seat['data']}
     return Response(json_data)

@@ -18,5 +18,36 @@
   </div>
 
   <h2> List of Bookings</h2>
+  <div>
+    {% if bookings %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Client ID</th>
+          <th>Event ID</th>
+          <th>Seat ID</th>
+          <th>Booking Status</th>
+          <th>Invoice ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+        <tr>
+          <td>{{ booking.booking_id }}</td>
+          <td>{{ booking.client_id }}</td>
+          <td>{{ booking.event_id }}</td>
+          <td>{{ booking.seat_id }}</td>
+          <td>{{ booking.booking_status }}</td>
+          <td>{{ booking.invoice_id }}</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+    {% else %}
+      <p> No Bookings Available</p>
+    {% endif %}
+  </div>
 </body>
 </html>

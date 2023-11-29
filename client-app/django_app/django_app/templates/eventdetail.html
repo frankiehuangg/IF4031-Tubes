@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Page</title>
+</head>
+<body>
+  <h1> Event Detail Page </h1>
+
+  <div style="margin-bottom: 5px; ">
+    <a style="text-decoration: none;" href="/event">
+      <button>Back to Event Page</button>
+    </a>
+  </div>
+
+  <div>
+    {% if event %}
+      <p> Event_id : {{event.event_id}}</p>
+      <p> Event_name : {{event.event_name}}</p>
+      <p> Date : {{event.event_date}}</p>
+      <p> Total Seat : {{event.total_seat}}</p>
+    {% else %}
+      <p> No Event Selected</p>
+    {% endif %}
+  </div>   
+</body>
+</html>
